@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Basic auth implemented"""
 from api.v1.auth.auth import Auth
+from models.user import User
+from typing import TypeVar
 import base64
 
 
@@ -44,3 +46,19 @@ class BasicAuth(Auth):
             return None, None
         bf_co, sp, af_co = decoded_base64_authorization_header.partition(":")
         return bf_co, af_co
+
+    def user_object_from_credentials(self, user_email: str,
+                                     user_pwd: str) -> TypeVar('User'):
+        """Basic - User object"""
+        if user_email is None or user_pwd is None:
+            return None
+        if type(user_email) is not str or type(user_pwd) is not str:
+            return None
+        user = User.search({'email': user_email})
+        if not user or len(user) == 0:
+            return None
+        usr = user[0]
+        if not usr.is_valid_password(user_pwd):
+            return None
+
+        return usr
