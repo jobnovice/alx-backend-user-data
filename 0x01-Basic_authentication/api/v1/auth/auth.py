@@ -7,26 +7,24 @@ from typing import List, TypeVar
 class Auth:
     """new class implemented for authentication"""
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
-        """require auth"""
-        if path is None or excluded_paths is None or len(excluded_paths) == 0:
+        """ Return boolean """
+        if path is None or excluded_paths is None or not len(excluded_paths):
             return True
 
-        # Ensure path always ends with a '/'
-        path = path + '/' if not path.endswith('/') else path
+        if path[-1] != '/':
+            path += '/'
+        if excluded_paths[-1] != '/':
+            excluded_paths += '/'
 
-        for excluded_path in excluded_paths:
-            # Ensure excluded path ends with '/'
-            normalized_excluded = excluded_path
-            if not excluded_path.endswith('/'):
-                normalized_excluded += '/'
+        astericks = [stars[:-1]
+                     for stars in excluded_paths if stars[-1] == '*']
 
-            # Check if excluded_path has a wildcard "*"
-            if '*' in normalized_excluded:
-                if path.startswith(normalized_excluded[:-1]):
-                    return False
-            elif path == normalized_excluded:
+        for stars in astericks:
+            if path.startswith(stars):
                 return False
 
+        if path in excluded_paths:
+            return False
         return True
 
     def authorization_header(self, request=None) -> str:
