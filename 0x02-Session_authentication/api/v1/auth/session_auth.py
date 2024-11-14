@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """new authentication mechanism"""
-from api.v1.auth import Auth
+from api.v1.auth.auth import Auth
 
 
 class SessionAuth(Auth):
