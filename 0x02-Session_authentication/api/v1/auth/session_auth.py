@@ -12,10 +12,16 @@ class SessionAuth(Auth):
         """creates a session id for the user with the user_id"""
         if not user_id:
             return None
-        if user_id is None:
-            return None
         if type(user_id) is not str:
             return None
         ssid = str(uuid.uuid4())
         self.user_id_by_session_id[f'{ssid}'] = user_id
         return ssid
+
+    def user_id_for_session_id(self, session_id: str = None) -> str:
+        """retrieves a user_id(the user) from the session id provided"""
+        if not session_id:
+            return None
+        if type(session_id) is not str:
+            return None
+        return self.user_id_by_session_id.get(f'{session_id}')
