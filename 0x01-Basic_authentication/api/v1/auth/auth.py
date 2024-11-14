@@ -8,13 +8,23 @@ class Auth:
     """new class implemented for authentication"""
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """require auth"""
-        if path is None or not excluded_paths:
+        if path is None or excluded_paths is None or len(excluded_paths) == 0:
             return True
 
-        path = path.rstrip('/')
-        for excluded in excluded_paths:
-            excluded = excluded.rstrip('/')
-            if path == excluded:
+        # Ensure path always ends with a '/'
+        path = path + '/' if not path.endswith('/') else path
+
+        for excluded_path in excluded_paths:
+            # Ensure excluded path ends with '/'
+            normalized_excluded = excluded_path
+            if not excluded_path.endswith('/'):
+                normalized_excluded += '/'
+
+            # Check if excluded_path has a wildcard "*"
+            if '*' in normalized_excluded:
+                if path.startswith(normalized_excluded[:-1]):
+                    return False
+            elif path == normalized_excluded:
                 return False
 
         return True
