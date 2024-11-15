@@ -41,11 +41,20 @@ def filter() -> None:
     # If both are None, abort with 401
     if authorization_header is None and session_cookie is None:
         abort(401)
-    if auth.authorization_header(request) is None:
-        abort(401)
-    if auth.current_user(request) is None:
-        abort(403)
-    request.current_user = auth.current_user(request)
+    if session_cookie:
+        user = auth.current_user(request)
+        if user is None:
+            abort(403)
+        request.current_user = user
+        return
+
+    # If only an authorization header is provided, check it
+    if authorization_header:
+        user = auth.current_user(request)
+        if user is None:
+            abort(403)
+        request.current_user = user
+        return
 
 
 @app.errorhandler(404)
