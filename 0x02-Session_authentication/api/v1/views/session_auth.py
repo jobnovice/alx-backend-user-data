@@ -7,7 +7,8 @@ import os
 from flask import session
 
 
-@app_views.route('/auth_session/login', methods=['POST'],  strict_slashes=False)
+@app_views.route('/auth_session/login', methods=['POST'],
+                 strict_slashes=False)
 def sessh_view():
     """handles all the routes for
         the session authentication
@@ -21,7 +22,7 @@ def sessh_view():
     usr = User.search({"email": email})
     if not usr or len(usr) == 0:
         return jsonify({"error": "no user found for this email"}), 404
-    
+
     usr = usr[0]  # Retrieve the first user found
     if not usr.is_valid_password(passw):
         return jsonify({"error": "wrong password"}), 401
