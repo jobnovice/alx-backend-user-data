@@ -42,7 +42,7 @@ class DB:
         self.__session.commit()
         return ed_user
 
-    def find_user_by(self, **kwargs: Mapping[str, Any]) -> User:
+    def find_user_by(self, **kwargs) -> User:
         """find user by keyword arguments"""
         if not kwargs:
             raise InvalidRequestError()
