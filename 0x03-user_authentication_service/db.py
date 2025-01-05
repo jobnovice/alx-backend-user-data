@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.exc import InvalidRequestError
-from typing import TypeVar
+from typing import TypeVar, Any, Mapping
 from user import Base
 from user import User
 
@@ -42,7 +42,7 @@ class DB:
         self.__session.commit()
         return ed_user
 
-    def find_user_by(self, **kwargs) -> User:
+    def find_user_by(self, **kwargs: Mapping[str, Any]) -> User:
         """find user by keyword arguments"""
         if not kwargs:
             raise InvalidRequestError()
