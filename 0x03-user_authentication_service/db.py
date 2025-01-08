@@ -55,7 +55,7 @@ class DB:
 
         return result
 
-    def update_user(self, user_id, **kwargs):
+    def update_user(self, user_id: int, **kwargs) -> None:
         """locates and updates a particular user"""
         user = self.find_user_by(id=user_id)
         if not user:
