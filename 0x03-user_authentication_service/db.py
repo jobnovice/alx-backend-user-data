@@ -54,3 +54,15 @@ class DB:
             raise InvalidRequestError(f"not a valid request {str(e)}")
 
         return result
+
+    def update_user(self, user_id, **kwargs):
+        """locates and updates a particular user"""
+        user = self.find_user_by(id=user_id)
+        if not user:
+            raise ValueError('no user with tha id')
+        for key in kwargs.keys():
+            if not hasattr(user, key):
+                raise ValueError(f'no attribute named {key}')
+            user.key = kwargs.get(key)
+        self.__session.commit()
+        return
