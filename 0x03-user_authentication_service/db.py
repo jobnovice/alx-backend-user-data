@@ -35,8 +35,7 @@ class DB:
 
     def add_user(self, email: str, hashed_password: str) -> User:
         """ addes the user to the database"""
-        Session = sessionmaker(bind=self._engine)
-        self.__session = Session()
+        self.__session = self._session
         ed_user = User(email=email, hashed_password=hashed_password)
         self.__session.add(ed_user)
         self.__session.commit()
@@ -44,10 +43,11 @@ class DB:
 
     def find_user_by(self, **kwargs) -> User:
         """find user by keyword arguments"""
+        self.__session = self._session
         if not kwargs:
             raise InvalidRequestError()
         try:
-            result = self.__session.query(User).filter_by(**kwargs).one()
+            result = self.__session.query(User).filter_by(**kwargs).one_or_none()
         except NoResultFound:
             raise NoResultFound('no result found')
         except Exception as e:
