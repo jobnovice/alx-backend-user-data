@@ -28,3 +28,15 @@ class Auth:
         else:
             ne_user = self._db.add_user(email, _hash_password(password))
             return ne_user
+
+    def valid_login(self, email: str, password: str) -> bool:
+        """vallidates user using it's credentials"""
+        user = self._db.find_user_by(email=email)
+        if user:
+            passw = password.encode('utf-8')
+            if bcrypt.checkpw(passw, user.hashed_password):
+                return True
+            else:
+                return False
+        else:
+            return False
