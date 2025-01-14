@@ -47,3 +47,13 @@ class Auth:
                 return False
         else:
             return False
+
+    def create_session(self, email: str) -> str:
+        """creates a sessionId for a prticular user and returns the Id"""
+        try:
+            user = self._db.find_user_by(email=email)
+            u_id = _generate_uuid()
+            user.session_id = u_id
+        except Exception as e:
+            return None
+        return u_id
