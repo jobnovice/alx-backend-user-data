@@ -19,6 +19,7 @@ def _generate_uuid() -> str:
     u_id = str(uuid.uuidv4())
     return u_id
 
+
 class Auth:
     """Auth class to interact with the authentication database.
     """
