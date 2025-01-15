@@ -3,6 +3,7 @@
 import bcrypt
 from db import DB
 from user import User
+from typing import Optional
 import uuid
 
 
@@ -57,3 +58,11 @@ class Auth:
         except Exception as e:
             return None
         return u_id
+
+    def get_user_from_session_id(self, session_id: str) -> Optional[User]:
+        """find user by the session Id"""
+        try:
+            user = self._db.find_user_by(session_id=session_id)
+        except Exception as e:
+            return None
+        return user
