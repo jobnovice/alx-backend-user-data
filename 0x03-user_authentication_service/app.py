@@ -3,6 +3,7 @@
 from flask import Flask
 from flask import request
 from flask import jsonify
+from flask import abort
 from auth import Auth
 app = Flask(__name__)
 AUTH = Auth()
@@ -25,6 +26,18 @@ def register_user():
 
     return jsonify({"email": f"{request.form['email']}",
                     "message": "user created"})
+
+
+@app.route("/sessions", methods=["POST"])
+def login():
+    """logins based on it's credentials"""
+    email = request.form['email']
+    valid = AUTH.valid_login(email, request.form['password'])
+    if valid:
+        AUTH.create_session(email)
+        return jsonify({"email": f"{email}", "message": "logged in"})
+    else:
+        abort(401)
 
 
 if __name__ == "__main__":
