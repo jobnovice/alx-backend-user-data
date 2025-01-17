@@ -56,13 +56,18 @@ class DB:
         return result
 
     def update_user(self, user_id: int, **kwargs) -> None:
-        """locates and updates a particular user"""
+        """Locates and updates a particular user."""
+        # Find the user by ID
         user = self.find_user_by(id=user_id)
         if not user:
-            raise ValueError('no user with tha id')
-        for key in kwargs.keys():
+            raise ValueError(f"No user found with ID {user_id}")
+
+        # Update the user's attributes
+        for key, value in kwargs.items():
             if not hasattr(user, key):
-                raise ValueError(f'no attribute named {key}')
-            user.key = kwargs.get(key)
+                raise ValueError(f"No attribute named '{key}' on the user object")
+            setattr(user, key, value)  # Dynamically update the attribute
+
+        # Commit the changes to the database
         self.__session.commit()
-        return
+
