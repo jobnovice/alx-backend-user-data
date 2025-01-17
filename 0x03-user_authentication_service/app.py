@@ -52,7 +52,10 @@ def logout():
         response = redirect('/')
         response.delete_cookie('session_id')
         return response
-    abort(403)
+
+    response = make_response("Forbidden", 403)
+    response.delete_cookie('session_id')  # Clear the invalid session cookie
+    return response
 
 
 if __name__ == "__main__":
