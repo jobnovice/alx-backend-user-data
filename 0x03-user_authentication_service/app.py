@@ -50,10 +50,20 @@ def logout() -> str:
     """
     session_id = request.cookies.get("session_id")
     user = AUTH.get_user_from_session_id(session_id)
-    if user is None:
+    if not session_id or not user:
         abort(403)
     AUTH.destroy_session(user.id)
     return redirect("/")
+
+
+@app.route('/profile', methods=["GET"])
+def profile():
+    """looks for a particular user respond with it's email"""
+    session_id = request.cookies.get('session_id')
+    user = AUTH.get_user_from_session_id(session_id)
+    if not session_id or not user:
+        abort(403)
+    return jsonify({"email": f"{user.email}"})
 
 
 if __name__ == "__main__":
