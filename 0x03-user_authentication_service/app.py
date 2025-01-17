@@ -3,7 +3,7 @@
 from flask import Flask
 from flask import request
 from flask import jsonify
-from flask import abort
+from flask import abort, redirect, url_for
 from auth import Auth
 app = Flask(__name__)
 AUTH = Auth()
@@ -40,6 +40,18 @@ def login():
         return response
     else:
         abort(401)
+
+
+@app.route("/sessions", methods=["DELETE"])
+def logout():
+    """destroys the user"""
+    session_id = request.cookies.get('session_id')
+    user = AUTH.get_user_from_session_id(session_id)
+    if user:
+        AUTH.destroy_session(user_id)
+        return redirect(url_for('hello'))
+    else:
+        return abort(403)
 
 
 if __name__ == "__main__":
