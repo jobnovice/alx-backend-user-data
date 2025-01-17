@@ -71,5 +71,14 @@ class Auth:
         """updates the corresponding user's sessionId to None"""
         user = self._db.find_user_by(id=user_id)
         if user:
-            user.session_id = None
+            self._db.update(user.id, session_id=None)
         return
+
+    def get_reset_password_token(self, email: str) -> str:
+        """generates and populate the user's reset token"""
+        user = self._db.find_user_by(email=email)
+        if not user:
+            raise ValueError()
+        reset_tok = _generate_uuid()
+        self._db.update(user.id, reset_token=reset_tok)
+        return reset_tok
