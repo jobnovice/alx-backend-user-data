@@ -43,19 +43,17 @@ def login():
 
 
 @app.route("/sessions", methods=["DELETE"])
-def logout():
-    """destroys the user"""
-    session_id = request.cookies.get('session_id')
+def logout() -> str:
+    """DELETE /sessions
+    Return:
+        - Redirects to home route.
+    """
+    session_id = request.cookies.get("session_id")
     user = AUTH.get_user_from_session_id(session_id)
-    if user:
-        AUTH.destroy_session(user.id)
-        response = redirect('/')
-        response.delete_cookie('session_id')
-        return response
-
-    response = make_response("Forbidden", 403)
-    response.delete_cookie('session_id')  # Clear the invalid session cookie
-    return response
+    if user is None:
+        abort(403)
+    AUTH.destroy_session(user.id)
+    return redirect("/")
 
 
 if __name__ == "__main__":
