@@ -88,7 +88,8 @@ class Auth:
         user = self._db.find_user_by(reset_token=reset_token)
         if not user:
             raise ValueError()
+        new_pass = _hash_password(password)
         self._db.update_user(user.id,
-                             hashed_password=_hash_password(password),
+                             hashed_password=new_pass,
                              reset_token=None)
         return
